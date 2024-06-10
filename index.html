@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>購物車</title>
+    <style>
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .cart {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>商品列表</h1>
+    <div class="product">
+        <h3>商品A</h3>
+        <p>價格: $10</p>
+        <button onclick="addToCart('商品A', 10)">加入購物車</button>
+    </div>
+    <div class="product">
+        <h3>商品B</h3>
+        <p>價格: $15</p>
+        <button onclick="addToCart('商品B', 15)">加入購物車</button>
+    </div>
+
+    <h1>購物車</h1>
+    <div class="cart">
+        <table id="cartTable">
+            <thead>
+                <tr>
+                    <th>商品</th>
+                    <th>價格</th>
+                    <th>數量</th>
+                    <th>總計</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align:right;">总计:</td>
+                    <td id="totalPrice">$0</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script>
+        let cart = [];
+        let totalPrice = 0;
+
+        function addToCart(name, price) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity++;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function updateQuantity(index, newQuantity) {
+            cart[index].quantity = newQuantity;
+            updateCart();
+        }
+
+        function updateCart() {
+            const tableBody = document.querySelector("#cartTable tbody");
+            tableBody.innerHTML = "";
+            totalPrice = 0;
+            cart.forEach((item, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>$${item.price}</td>
+                    <td><input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)"></td>
+                    <td>$${item.price * item.quantity}</td>
+                    <td><button onclick="removeFromCart(${index})">移除</button></td>
+                `;
+                tableBody.appendChild(row);
+                totalPrice += item.price * item.quantity;
+            });
+            document.querySelector("#totalPrice").textContent = `$${totalPrice}`;
+        }
+    </script>
+</body>
+</html>
