@@ -8,15 +8,15 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-			background-attachment: fixed;
+            background-attachment: fixed;
             filter: blur(5px) brightness(0.5);
         }
-		.content {
+        .content {
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             margin: 20px;
             border-radius: 5px;
-		}
+        }
         .product {
             border: 1px solid #ccc;
             padding: 10px;
@@ -32,70 +32,28 @@
     </style>
 </head>
 <body>
-    <h1>商品列表</h1>
-    <div class="product">
-        <h3>巧克力慕斯</h3>
-        <p>價格: $80</p>
-        <button onclick="addToCart('巧克力慕斯', 80)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>巧克力戚風蛋糕</h3>
-        <p>價格: $75</p>
-        <button onclick="addToCart('巧克力戚風蛋糕', 75)">加入購物車</button>
-    </div>
-    <div class="product">
-        <h3>輕乳酪蛋糕</h3>
-        <p>價格: $100</p>
-        <button onclick="addToCart('輕乳酪蛋糕', 100)">加入購物車</button>
-    </div>
-	 <div class="product">
-        <h3>蜂蜜蛋糕</h3>
-        <p>價格: $75</p>
-        <button onclick="addToCart('蜂蜜蛋糕', 75)">加入購物車</button>
-		</div>
-		<div class="product">
-        <h3>千層蛋糕</h3>
-        <p>價格: $80</p>
-        <button onclick="addToCart('千層蛋糕', 80)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>巧克力布朗尼</h3>
-        <p>價格: $90</p>
-        <button onclick="addToCart('巧克力布朗尼', 90)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>巧克力曲奇<h3>
-		<p>價格: $90</p>
-        <button onclick="addToCart('巧克力曲奇', 90)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>雪花酥<h3>
-		<p>價格: $80</p>
-        <button onclick="addToCart('雪花酥', 80)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>美式軟餅乾<h3>
-		<p>價格: $80</p>
-        <button onclick="addToCart('美式軟餅乾', 80)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>馬卡龍<h3>
-		<p>價格: $90</p>
-        <button onclick="addToCart('馬卡龍', 90)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>泡芙<h3>
-		<p>價格: $90</p>
-        <button onclick="addToCart('泡芙', 90)">加入購物車</button>
-    </div>
-	<div class="product">
-        <h3>蝴蝶酥<h3>
-		<p>價格: $70</p>
-        <button onclick="addToCart('馬卡龍', 70)">加入購物車</button>
-    </div>
-    <h1>購物車</h1>
+    <table border="1">
+        <caption><h1>商品列表</h1></caption>
+        <tr>
+            <th>品項</th>
+            <th>圖片</th>
+            <th>價格</th>
+            <th>加入購物車</th>
+        </tr>
+        <tr>
+            <div class="product">
+                <td>巧克力慕斯</td>
+                <td><img src="images/巧克力慕斯.png" width="200" height="200" /></td>
+                <td>$80</td>
+                <td><button onclick="addToCart('巧克力慕斯', 80)">加入購物車</button></td>
+            </div>
+        </tr>
+        <!-- 省略其他商品 -->
+    </table>
+    
     <div class="cart">
         <table id="cartTable">
+            <h1>購物車</h1>
             <thead>
                 <tr>
                     <th>商品</th>
@@ -115,22 +73,29 @@
         </table>
         <button onclick="showCheckoutForm()">結帳</button>
     </div>
+    
     <div id="checkoutForm" class="checkout-form" style="display: none;">
-        <h2>結帳資訊</h2>
-        <label for="name">姓名:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="address">地址:</label>
-        <input type="text" id="address" name="address" required><br><br>
-        <label for="phone">電話:</label>
-        <input type="tel" id="phone" name="phone" required><br><br>
-        <label for="email">電子郵件:</label>
-        <input type="email" id="email" name="email" required><br><br>
-        <button onclick="sendOrder()">送出訂單</button>
+        <form id="orderForm" onsubmit="sendOrder(event)">
+            <h2>結帳資訊</h2>
+            <label for="name">姓名:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="address">地址:</label>
+            <input type="text" id="address" name="address" required><br><br>
+            <label for="phone">電話:</label>
+            <input type="tel" id="phone" name="phone" required><br><br>
+            <label for="email">電子郵件:</label>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="orderDetails">訂單明細:</label><br>
+            <textarea id="orderDetails" name="orderDetails" readonly style="width: 100%; height: 100px;"></textarea><br><br>
+            <button type="submit">送出訂單</button>
+        </form>
     </div>
+    
     <script>
         let cart = [];
         let totalPrice = 0;
-function addToCart(name, price) {
+
+        function addToCart(name, price) {
             const item = cart.find(item => item.name === name);
             if (item) {
                 item.quantity++;
@@ -168,28 +133,37 @@ function addToCart(name, price) {
             });
             document.querySelector("#totalPrice").textContent = `$${totalPrice}`;
         }
-        // addToCart, removeFromCart, updateQuantity 和 updateCart 函數與之前相同
 
         function showCheckoutForm() {
             document.getElementById("checkoutForm").style.display = "block";
+            const orderDetails = document.getElementById("orderDetails");
+            orderDetails.value = cart.map(item => `${item.name} x ${item.quantity}`).join('\n');
         }
 
-        function sendOrder() {
-            const name = document.getElementById("name").value;
-            const address = document.getElementById("address").value;
-            const phone = document.getElementById("phone").value;
-            const email = document.getElementById("email").value;
+        function sendOrder(event) {
+            event.preventDefault();
+            const form = document.getElementById('orderForm');
+            const data = new FormData(form);
+            const jsonData = {};
+            data.forEach((value, key) => jsonData[key] = value);
 
-            // 在這裡可以添加發送訂單的邏輯,例如使用AJAX發送到服務器
-            alert(`訂單已送出!姓名:${name},地址:${address},電話:${phone},電子郵件:${email},總金額:$${totalPrice}`);
-
-            // 清空購物車
-            cart = [];
-            updateCart();
-
-            // 隱藏結帳表單
-            document.getElementById("checkoutForm").style.display = "none";
+            fetch('http://your-node-red-server:1880/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('訂單已送出');
+            })
+            .catch(error => {
+                alert('訂單送出失敗');
+                console.error('Error:', error);
+            });
         }
     </script>
 </body>
 </html>
+
